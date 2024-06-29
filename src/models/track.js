@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require("../database/database");
 
 const trackSchema = new mongoose.Schema({
   filename: { type: String, required: true },
