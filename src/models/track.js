@@ -8,6 +8,12 @@ const trackSchema = new mongoose.Schema({
   uploadedAt: { type: Date, default: Date.now },
 });
 
-const Track = mongoose.model("Track", trackSchema);
+const playlistSchema = new mongoose.Schema({
+  name: String,
+  tracks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Track" }],
+});
 
-module.exports = Track;
+const Track = mongoose.model("Track", trackSchema);
+const Playlist = mongoose.model("Playlist", playlistSchema);
+
+module.exports = { Track, Playlist };

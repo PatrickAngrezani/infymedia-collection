@@ -1,4 +1,4 @@
-const Track = require("../models/track");
+const { Track } = require("../models/track");
 const express = require("express");
 const router = express.Router();
 const { upload } = require("../server");
