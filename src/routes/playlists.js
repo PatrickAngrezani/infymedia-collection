@@ -11,13 +11,19 @@ router.post("/create-playlist", async (req, res) => {
 
     res.status(201).send("Playlist created succesfully");
   } catch (error) {
-    res.status(500).send("Error creating playlist:", error);
+    console.error(error);
+    res.status(500).send("Error creating playlist");
   }
 });
 
 router.get("/playlists", async (req, res) => {
-  // Recuperar playlists do banco de dados
-  res.status(200).json(playlists);
+  try {
+    const playlists = await Playlist.find();
+    res.status(200).json(playlists);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error getting playlists");
+  }
 });
 
 module.exports = router;
