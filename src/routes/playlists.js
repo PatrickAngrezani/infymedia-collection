@@ -45,4 +45,28 @@ router.delete("/playlists/:id", async (req, res) => {
   }
 });
 
+router.put("/playlists/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+
+    const playlist = await Playlist.findByIdAndUpdate(
+      id,
+      { name },
+      {
+        new: true,
+      }
+    );
+
+    if (!playlist) {
+      return res.status(404).send("Playlist not found");
+    }
+
+    res.status(200).json(playlist);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Server Error");
+  }
+});
+
 module.exports = router;
