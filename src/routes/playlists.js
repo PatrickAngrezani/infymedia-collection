@@ -1,32 +1,48 @@
-const { Track, Playlist } = require("../models/track");
+const { Track, Playlist } = require("../models/models");
 const express = require("express");
 const router = express.Router();
 
 router.post("/create-playlist", async (req, res) => {
-  const { name, tracks } = req.body;
-
-  console.log({ body: req.body });
+  const { name } = req.body;
 
   try {
-    const newPlaylist = new Playlist({ name, tracks });
+    const newPlaylist = new Playlist({ name });
     await newPlaylist.save();
 
-    // update tracks in reference to new playlist
-    if (tracks && tracks.length > 0) {
-      await Track.updateMany(
-        { _id: { $in: tracks } },
-        { $addToSet: { playlists: newPlaylist._id } }
-      );
-    }
-    res.status(200).send("Playlist created succesfully");
+    res.status(201).send("Playlist created succesfully");
   } catch (error) {
-    res.status(500).send("Error creating playlist:", error);
+    console.error(error);
+    res.status(500).send("Error creating playlist");
   }
 });
 
 router.get("/playlists", async (req, res) => {
-  // Recuperar playlists do banco de dados
-  res.status(200).json(playlists);
+  try {
+    const playlists = await Playlist.find();
+    res.status(200).json(playlists);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error getting playlists");
+  }
+});
+
+router.delete("/playlists/:id", async (req, res) => {
+  try {
+    const playlistId = req.params.id;
+    const deletedPlaylist = await Playlist.findByIdAndDelete(playlistId);
+
+    if (!deletedPlaylist) {
+      return res.status(404).send("Playlist not found");
+    }
+
+    res.status(200).json({
+      message: "Playlist deleted succesfully",
+      playlist: deletedPlaylist,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Server Error");
+  }
 });
 
 module.exports = router;

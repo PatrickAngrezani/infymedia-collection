@@ -9,7 +9,7 @@ const trackSchema = new mongoose.Schema({
 });
 
 const playlistSchema = new mongoose.Schema({
-  name: String,
+  name: { type: String, required: true },
   tracks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Track" }],
 });
 
