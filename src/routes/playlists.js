@@ -26,4 +26,23 @@ router.get("/playlists", async (req, res) => {
   }
 });
 
+router.delete("/playlists/:id", async (req, res) => {
+  try {
+    const playlistId = req.params.id;
+    const deletedPlaylist = await Playlist.findByIdAndDelete(playlistId);
+
+    if (!deletedPlaylist) {
+      return res.status(404).send("Playlist not found");
+    }
+
+    res.status(200).json({
+      message: "Playlist deleted succesfully",
+      playlist: deletedPlaylist,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Server Error");
+  }
+});
+
 module.exports = router;
