@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const { upload } = require("../server");
 
-router.post("/upload", upload.single("file"), async (req, res) => {
+router.post("/tracks/upload", upload.single("file"), async (req, res) => {
   if (!req.file) {
     return res.status(400).send("No files sent");
   }

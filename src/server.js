@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 module.exports = { app, upload };
 
-const uploadRouter = require("./routes/upload");
+const uploadRouter = require("./routes/tracks");
 const playlistRouter = require("./routes/playlists");
 app.use("/", uploadRouter);
 app.use("/", playlistRouter);
