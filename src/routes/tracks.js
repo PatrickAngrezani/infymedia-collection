@@ -25,4 +25,23 @@ router.post("/tracks/upload", upload.single("file"), async (req, res) => {
   }
 });
 
+router.delete("/tracks/delete/:id", async (req, res) => {
+  try {
+    const trackId = req.params.id;
+    const deletedTrack = await Track.findByIdAndDelete(trackId);
+
+    if (!deletedTrack) {
+      return res.status(404).send("Track not found");
+    }
+
+    res.status(200).json({
+      message: "Track deleted succesfully",
+      track: deletedTrack,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Server Error");
+  }
+});
+
 module.exports = router;
