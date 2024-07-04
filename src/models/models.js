@@ -13,7 +13,12 @@ const playlistSchema = new mongoose.Schema({
   tracks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Track" }],
 });
 
+const tagSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+});
+
 const Track = mongoose.model("Track", trackSchema);
 const Playlist = mongoose.model("Playlist", playlistSchema);
+const Tag = mongoose.model("Tag", tagSchema);
 
-module.exports = { Track, Playlist };
+module.exports = { Track, Playlist, Tag };
