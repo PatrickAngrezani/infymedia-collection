@@ -1,4 +1,4 @@
-const { Track } = require("../models/models");
+const { Track, Playlist } = require("../models/models");
 const express = require("express");
 const router = express.Router();
 const { upload } = require("../server");
@@ -9,12 +9,21 @@ router.post("/tracks/upload", upload.single("file"), async (req, res) => {
   }
 
   const { tags, playlists } = req.body;
+  const playlistArray = playlists ? playlists.split(",") : [];
+
+  const checkPlaylistsExists = await Playlist.find({
+    name: { $in: playlistArray },
+  });
+
+  const existingPlaylist = checkPlaylistsExists.map(
+    (playlist) => playlist.name
+  );
 
   const newTrack = new Track({
     filename: req.file.filename,
     originalName: req.file.originalname,
     tags: tags ? tags.split(",") : [],
-    playlists: playlists ? playlists.split(",") : [],
+    playlists: existingPlaylist,
   });
 
   try {
