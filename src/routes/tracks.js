@@ -44,4 +44,26 @@ router.delete("/tracks/delete/:id", async (req, res) => {
   }
 });
 
+router.put("/tracks/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { filename, tags } = req.body;
+
+    const track = await Track.findByIdAndUpdate(
+      id,
+      { filename, tags },
+      { new: true }
+    );
+
+    if (!track) {
+      return res.status(404).send("Track not found");
+    }
+
+    res.status(200).json(track);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Server Error");
+  }
+});
+
 module.exports = router;
