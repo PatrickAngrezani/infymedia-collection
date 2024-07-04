@@ -6,6 +6,12 @@ router.post("/create-playlist", async (req, res) => {
   const { name } = req.body;
 
   try {
+    const existingPlaylist = await Playlist.findOne({ name });
+
+    if (existingPlaylist) {
+      return res.status(409).send("Invalid playlist name");
+    }
+
     const newPlaylist = new Playlist({ name });
     await newPlaylist.save();
 
