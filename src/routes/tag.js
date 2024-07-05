@@ -22,4 +22,23 @@ router.post("/create-tag", async (req, res) => {
   }
 });
 
+router.get("/tags/:id?", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    if (id) {
+      const tag = await Tag.findById(id);
+      return tag
+        ? res.status(200).json(tag)
+        : res.status(404).send("Tag not found");
+    } else {
+      const tags = await Tag.find();
+      res.status(200).json(tags);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error getting tags");
+  }
+});
+
 module.exports = router;
