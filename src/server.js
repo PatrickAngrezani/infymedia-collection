@@ -23,8 +23,10 @@ module.exports = { app, upload };
 
 const uploadRouter = require("./routes/tracks");
 const playlistRouter = require("./routes/playlists");
+const tagRouter = require("./routes/tag");
 app.use("/", uploadRouter);
 app.use("/", playlistRouter);
+app.use("/", tagRouter);
 
 app.listen(port, () => {
   console.log(`running on port ${port}`);
