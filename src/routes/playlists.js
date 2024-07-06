@@ -22,10 +22,19 @@ router.post("/create-playlist", async (req, res) => {
   }
 });
 
-router.get("/playlists", async (req, res) => {
+router.get("/playlists/:id?", async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const playlists = await Playlist.find();
-    res.status(200).json(playlists);
+    if (id) {
+      const playlist = await Playlist.findById(id);
+      return playlist
+        ? res.status(200).json(playlist)
+        : res.status(404).send("Playlist not found");
+    } else {
+      const playlists = await Playlist.find();
+      res.status(200).json(playlists);
+    }
   } catch (error) {
     console.error(error);
     res.status(500).send("Error getting playlists");
