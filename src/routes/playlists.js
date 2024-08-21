@@ -1,4 +1,4 @@
-const { Track, Playlist } = require("../models/models");
+const { Playlist } = require("../models/models");
 const express = require("express");
 const router = express.Router();
 
@@ -28,6 +28,7 @@ router.get("/playlists/:id?", async (req, res) => {
   try {
     if (id) {
       const playlist = await Playlist.findById(id);
+
       return playlist
         ? res.status(200).json(playlist)
         : res.status(404).send("Playlist not found");

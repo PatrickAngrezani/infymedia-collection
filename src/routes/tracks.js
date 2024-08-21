@@ -75,4 +75,25 @@ router.put("/tracks/:id", async (req, res) => {
   }
 });
 
+router.get("/tracks/:id?", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    if (id) {
+      const track = await Track.findById(id);
+
+      return track
+        ? res.status(200).json(tracks)
+        : res.status(404).send("Track not found");
+    } else {
+      const tracks = await Track.find();
+      res.status(200).json(tracks);
+    }
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).send("Error getting tracks");
+  }
+});
+
 module.exports = router;
