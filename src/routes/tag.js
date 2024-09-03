@@ -1,8 +1,9 @@
 const { Tag } = require("../models/models");
 const express = require("express");
 const router = express.Router();
+const { protect } = require("../middlewares/authMiddleware");
 
-router.post("/create-tag", async (req, res) => {
+router.post("/create-tag", protect, async (req, res) => {
   const { name } = req.body;
 
   try {
@@ -22,7 +23,7 @@ router.post("/create-tag", async (req, res) => {
   }
 });
 
-router.get("/tags/:id?", async (req, res) => {
+router.get("/tags/:id?", protect, async (req, res) => {
   const { id } = req.params;
 
   try {

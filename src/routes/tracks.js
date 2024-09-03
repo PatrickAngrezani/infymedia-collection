@@ -2,8 +2,10 @@ const { Track, Playlist } = require("../models/models");
 const express = require("express");
 const router = express.Router();
 const { upload } = require("../server");
+const { protect } = require("../middlewares/authMiddleware");
 
-router.post("/tracks/upload", upload.single("file"), async (req, res) => {
+
+router.post("/tracks/upload", protect, upload.single("file"), async (req, res) => {
   if (!req.file) {
     return res.status(400).send("No files sent");
   }
@@ -34,7 +36,7 @@ router.post("/tracks/upload", upload.single("file"), async (req, res) => {
   }
 });
 
-router.delete("/tracks/delete/:id", async (req, res) => {
+router.delete("/tracks/delete/:id", protect, async (req, res) => {
   try {
     const trackId = req.params.id;
     const deletedTrack = await Track.findByIdAndDelete(trackId);
@@ -53,7 +55,7 @@ router.delete("/tracks/delete/:id", async (req, res) => {
   }
 });
 
-router.put("/tracks/:id", async (req, res) => {
+router.put("/tracks/:id", protect, async (req, res) => {
   try {
     const { id } = req.params;
     const { filename, tags } = req.body;
@@ -75,7 +77,7 @@ router.put("/tracks/:id", async (req, res) => {
   }
 });
 
-router.get("/tracks/:id?", async (req, res) => {
+router.get("/tracks/:id?", protect, async (req, res) => {
   const { id } = req.params;
 
   try {

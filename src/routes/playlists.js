@@ -1,8 +1,9 @@
 const { Playlist } = require("../models/models");
 const express = require("express");
 const router = express.Router();
+const { protect } = require("../middlewares/authMiddleware");
 
-router.post("/create-playlist", async (req, res) => {
+router.post("/create-playlist", protect, async (req, res) => {
   const { name } = req.body;
 
   try {
@@ -22,7 +23,7 @@ router.post("/create-playlist", async (req, res) => {
   }
 });
 
-router.get("/playlists/:id?", async (req, res) => {
+router.get("/playlists/:id?", protect, async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -42,7 +43,7 @@ router.get("/playlists/:id?", async (req, res) => {
   }
 });
 
-router.delete("/playlists/:id", async (req, res) => {
+router.delete("/playlists/:id", protect, async (req, res) => {
   try {
     const playlistId = req.params.id;
     const deletedPlaylist = await Playlist.findByIdAndDelete(playlistId);
@@ -61,7 +62,7 @@ router.delete("/playlists/:id", async (req, res) => {
   }
 });
 
-router.put("/playlists/:id", async (req, res) => {
+router.put("/playlists/:id", protect, async (req, res) => {
   try {
     const { id } = req.params;
     const { name } = req.body;

@@ -4,6 +4,7 @@ const { User } = require("../models/models");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const express = require("express");
+const { protect } = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
@@ -129,8 +130,8 @@ const deleteUser = async (req, res) => {
 
 router.post("/users/register", registerUser);
 router.post("/users/login", authUser);
-router.post("/users/forgot-password", forgotPassword);
-router.get("/users/:id?", getUsers);
-router.delete("/users/:id?", deleteUser);
+router.post("/users/forgot-password", protect, forgotPassword);
+router.get("/users/:id?", protect, getUsers);
+router.delete("/users/:id?", protect, deleteUser);
 
 module.exports = router;
