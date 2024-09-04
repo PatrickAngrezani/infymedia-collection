@@ -1,10 +1,12 @@
+require("dotenv").config({ path: "../.env" });
+
 const multer = require("multer");
 const bodyParser = require("body-parser");
 const express = require("express");
 const app = express();
 const path = require("path");
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -15,7 +17,11 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 1024 * 1024 * 10 },
+});
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

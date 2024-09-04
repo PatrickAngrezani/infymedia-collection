@@ -1,40 +1,49 @@
+require("dotenv").config({ path: "../.env" });
+
 const { Track, Playlist } = require("../models/models");
 const express = require("express");
 const router = express.Router();
-const { upload } = require("../server");
 const { protect } = require("../middlewares/authMiddleware");
+const { upload, uploadToS3 } = require("../storage/s3-service");
 
+router.post(
+  "/tracks/upload",
+  protect,
+  upload.single("file"),
+  async (req, res) => {
+    if (!req.file) {
+      return res.status(400).send("No files sent");
+    }
 
-router.post("/tracks/upload", protect, upload.single("file"), async (req, res) => {
-  if (!req.file) {
-    return res.status(400).send("No files sent");
+    try {
+      const { url, filename } = await uploadToS3(req.file);
+      const { tags, playlists } = req.body;
+      
+      const playlistArray = playlists ? playlists.split(",") : [];
+
+      const checkPlaylistsExists = await Playlist.find({
+        name: { $in: playlistArray },
+      });
+
+      const existingPlaylist = checkPlaylistsExists.map(
+        (playlist) => playlist.name
+      );
+
+      const newTrack = new Track({
+        filename: filename,
+        originalName: req.file.originalname,
+        tags: tags ? tags.split(",") : [],
+        playlists: existingPlaylist,
+        url: url,
+      });
+
+      await newTrack.save();
+      res.status(201).send("Upload successfully");
+    } catch (error) {
+      res.status(500).send(`Error saving in database: ${error}`);
+    }
   }
-
-  const { tags, playlists } = req.body;
-  const playlistArray = playlists ? playlists.split(",") : [];
-
-  const checkPlaylistsExists = await Playlist.find({
-    name: { $in: playlistArray },
-  });
-
-  const existingPlaylist = checkPlaylistsExists.map(
-    (playlist) => playlist.name
-  );
-
-  const newTrack = new Track({
-    filename: req.file.filename,
-    originalName: req.file.originalname,
-    tags: tags ? tags.split(",") : [],
-    playlists: existingPlaylist,
-  });
-
-  try {
-    await newTrack.save();
-    res.status(200).send("Upload successfully");
-  } catch (error) {
-    res.status(500).send(`Error saving in database: ${error}`);
-  }
-});
+);
 
 router.delete("/tracks/delete/:id", protect, async (req, res) => {
   try {
