@@ -9,9 +9,6 @@ const path = require("path");
 const port = process.env.PORT || 3000;
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "../uploads/");
-  },
   filename: function (req, file, cb) {
     cb(null, file.originalname + path.extname(file.originalname.split(".")[1]));
   },
