@@ -6,7 +6,7 @@ const express = require("express");
 const app = express();
 const path = require("path");
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 const storage = multer.diskStorage({
   filename: function (req, file, cb) {
