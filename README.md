@@ -22,6 +22,21 @@ Infymedia Collection is a node.js-bases app designed to handle media uploads wit
 - **jsonwebtoken**: For authentication via JWT tokens.
 - **nodemailer**: For sending emails from the application.
 - **Swagger**: API documentation and testing via `swagger-jsdoc` and `swagger-ui-express`.
+- **Kubernetes**: Used for container orchestration, managing the deployment, scaling, and networking of containerized applications. 
+
+## Kubernetes Integration
+
+This application is deployed and managed using Kubernetes, which handles the orchestration of containers. It utilizes the following Kubernetes components:
+
+- **Deployments**: To manage the application pods and ensure the right number of instances are running.
+- **Services**: To expose the application for internal or external access.
+- **ConfigMaps/Secrets**: For managing environment-specific configurations and secrets like API keys.
+- **Horizontal Pod Autoscaling**: To automatically scale the application based on demand.
+
+Deployment steps:
+1. **Dockerize the app**: Its containerized using Docker.
+2. **YAML files**: Kubernetes manifests (YAML files) define the resources like pods, services, and deployments.
+3. **Apply Kubernetes manifests**: The manifests are applied to the Kubernetes cluster using kubectl.
 
 ## Installation
 
