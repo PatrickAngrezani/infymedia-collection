@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: infymedia-node-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: infymedia-node-app
+  template:
+    metadata:
+      labels:
+        app: infymedia-node-app
+    spec:
+      containers:
+      - name: infymedia-node-app
+        image: app-infymediacollection:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 4000
+        env:
+        - name: JWT_SECRET
+          value: jwttokendisco
+        - name: JWT_PAYLOAD
+          value: token-signin
+        - name: AWS_ACCESS_KEY_ID
+          value: AKIARHQBNSPFMI47LJ3V
+        - name: AWS_SECRET_ACCESS_KEY
+          value: wq4s2ZA0Vv6toLSZEtfYmklPtrzC2WQrr
+        - name: AWS_S3_BUCKET_NAME
+          value: firstbucket1425
+        - name: AWS_REGION
+          value: us-east-2
+        - name: PORT
+          value: "4000"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-app-service
+spec:
+  selector:
+    app: node-app
+  ports:
+    - protocol: TCP
+      port: 4000
+      targetPort: 4000
+  type: LoadBalancer
+
